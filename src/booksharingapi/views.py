@@ -24,6 +24,7 @@ from rest_framework import permissions
 from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework import generics
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.decorators import parser_classes
 from .models import Stud, Book, PurchasedBook, Image, FeedBack
 from .serializers import StudentSerializer, BookSerializer, PurchasedBookSerializer, ImageSerializer, FeedBackSerializer
@@ -37,7 +38,11 @@ def index(request):
 
 
 class StudentList(APIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication,
+                              BasicAuthentication, TokenAuthentication]
+
+    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     parser_class = (FileUploadParser, MultiPartParser, JSONParser)
     """
     List all snippets, or create a new snippet.
@@ -46,7 +51,6 @@ class StudentList(APIView):
     def get(self, request, format=None):
         student = Stud.objects.all()
         serializer = StudentSerializer(student, many=True)
-        # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
         return Response(serializer.data)
 
@@ -91,7 +95,9 @@ class StudentList(APIView):
 
 
 class StudentDetail(APIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication,
+                              BasicAuthentication, TokenAuthentication]
     # def getStudent(self, enrollmentNo):
     #     student = Stud.objects.filter(
     #         enrollmentNo=enrollmentNo)
