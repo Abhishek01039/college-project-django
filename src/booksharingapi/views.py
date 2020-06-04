@@ -4,12 +4,14 @@ import json
 import socket
 import smtplib
 import random
+import graphene
 from mimetypes import guess_extension
 from django.shortcuts import render, HttpResponse
 from django.contrib.auth import login as django_login, logout as django_logout
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.mail import send_mail
+from graphene_django import DjangoObjectType
 from rest_framework.parsers import FileUploadParser, MultiPartParser, JSONParser
 from rest_framework import viewsets
 from rest_framework import permissions
@@ -27,7 +29,9 @@ from rest_framework import generics
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.decorators import parser_classes
 from .models import Stud, Book, PurchasedBook, Image, FeedBack
-from .serializers import StudentSerializer, BookSerializer, PurchasedBookSerializer, ImageSerializer, FeedBackSerializer
+from .serializers import StudentSerializer, BookSerializer, PurchasedBookSerializer, ImageSerializer, FeedBackSerializer,BookModelMutation
+from bookSharingBackend.schema import schema
+
 # from .permissions import IsOwnerOrReadOnly
 
 # Create your views here.
@@ -38,9 +42,9 @@ def index(request):
 
 
 class StudentList(APIView):
-    # permission_classes = [IsAuthenticated]
-    authentication_classes = [SessionAuthentication,
-                              BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    # authentication_classes = [SessionAuthentication,
+    #                           BasicAuthentication, TokenAuthentication]
 
     # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     parser_class = (FileUploadParser, MultiPartParser, JSONParser)
@@ -95,9 +99,9 @@ class StudentList(APIView):
 
 
 class StudentDetail(APIView):
-    # permission_classes = [IsAuthenticated]
-    authentication_classes = [SessionAuthentication,
-                              BasicAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    # authentication_classes = [SessionAuthentication,
+    #                           BasicAuthentication, TokenAuthentication]
     # def getStudent(self, enrollmentNo):
     #     student = Stud.objects.filter(
     #         enrollmentNo=enrollmentNo)
@@ -145,9 +149,66 @@ class HomeList(generics.ListCreateAPIView):
 
     serializer_class = BookSerializer
 
+# To create a GraphQL schema for it you simply have to write the following:
+# class Query(graphene.ObjectType):
+#     users = graphene.List(Book)
 
+#     def resolve_users(self, info):
+#         return Book.objects.all()
+
+# schema = graphene.Schema(query=Query)
+
+class BookType(DjangoObjectType):
+    class Meta:
+        model = Book
+
+
+
+class BookMutation(APIView):
+
+    def get(self,request):
+        query='''
+            
+            query hello{
+              allIngredients{
+                edges{
+                  node{
+                    id
+                    bookId
+                    bookName
+                    isbnNo
+                    authorName
+                    pubName
+                    originalPrice
+                    price
+                    bookCatgName  
+                    postedBy{
+                      id
+                      enrollmentNo
+                      firstName
+                      lastName
+                      email
+                      age
+                      collegeName
+                      collegeYear
+                      course
+                    }
+                  }
+                }
+              }
+            }
+
+         ''';
+        result = schema.execute(query)
+        return Response(result.data)
+    
+    
+
+# curl -X GET http://127.0.0.1:8000/booksharing/book/ -H 'Authorization: Token c19a600c77f8633a0f79c737b1851bbbb4f5e661' | json_pp
 class BookList(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
+    # permission_classes=[TokenAuthentication,SessionAuthentication,BasicAuthentication]
+
     # parser_class = (FileUploadParser, MultiPartParser, JSONParser)
     """
     List all snippets, or create a new snippet.
@@ -160,7 +221,6 @@ class BookList(generics.ListCreateAPIView):
     # serializer_context = {
     #     'request': request,
     # }
-
     queryset = Book.objects.all()
     # print(queryset)
     # serializer = BookSerializer(
@@ -169,6 +229,7 @@ class BookList(generics.ListCreateAPIView):
     # print(book)
     serializer_class = BookSerializer
     # return Response(serializer_class)
+    
 
     def post(self, request, format=None):
 
@@ -248,6 +309,7 @@ class BookDetail(APIView):
 
 class PurchasedBookList(APIView):
     permission_classes = [IsAuthenticated]
+    
     parser_class = (FileUploadParser, MultiPartParser, JSONParser)
     """
     List all snippets, or create a new snippet.

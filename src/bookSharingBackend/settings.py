@@ -33,8 +33,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get(
     "SECRET_KEY", "32db5fd9bbd220fb86e812bda1f60015f864cecf4b3fe717")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# DEBUG = False
+# DEBUG = True
+DEBUG = False
 DEBUG404 = True
 
 ALLOWED_HOSTS = [
@@ -64,9 +64,16 @@ INSTALLED_APPS = [
     'rest_framework',
     'phonenumber_field',
     'rest_framework.authtoken',
-    'django_cleanup'
+    'django_cleanup',
+    'graphene_django',
 ]
 
+GRAPHENE = {
+    "SCHEMA": "bookSharingBackend.schema.schema",
+    "SCHEMA_INDENT": 2,
+    "MIDDLEWARE": ("graphene_django.debug.DjangoDebugMiddleware",),
+    
+}
 
 # REST_FRAMEWORK = {
 #     # Use Django's standard `django.contrib.auth` permissions,
@@ -86,9 +93,9 @@ REST_FRAMEWORK = {
 
 
 REST_FRAMEWORK = {
-    # 'DEFAULT_PERMISSION_CLASSES': [
+    # 'DEFAULT_PERMISSION_CLASSES': (
     #     'rest_framework.permissions.IsAuthenticated',
-    # ],
+    # ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
     ),
@@ -133,10 +140,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',
 
 ]
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 ROOT_URLCONF = 'bookSharingBackend.urls'
 

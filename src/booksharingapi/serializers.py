@@ -4,6 +4,7 @@ from rest_framework import routers, serializers, viewsets
 from .models import Stud, Book, PurchasedBook, Image, FeedBack
 from rest_framework import serializers, fields, exceptions
 from django.contrib.auth import authenticate
+from graphene_django.rest_framework.mutation import SerializerMutation
 
 # class CategorySerializer(serializers.HyperlinkedModelSerializer):
 #     class Meta:
@@ -42,6 +43,7 @@ class StudentSerializer(serializers.ModelSerializer):
         instance.photo = validated_data.get('photo', instance.photo)
         instance.save()
         return instance
+
 
 
 class PurchasedBookSerializer(serializers.ModelSerializer):
@@ -110,6 +112,12 @@ class BookSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+# Mutation for graphql
+class BookModelMutation(SerializerMutation):
+    class Meta:
+        serializer_class = BookSerializer
+        model_operations = ['create']
+        lookup_field = 'bookId'
 
 class FeedBackSerializer(serializers.ModelSerializer):
 

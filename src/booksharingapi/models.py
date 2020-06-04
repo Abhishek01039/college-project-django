@@ -47,7 +47,7 @@ class Book(models.Model):
     originalPrice = models.IntegerField()
     price = models.IntegerField()
     bookCatgName = models.CharField(max_length=200, default="")
-    postedBy = models.ForeignKey(Stud, on_delete=models.CASCADE)
+    postedBy = models.ForeignKey(Stud, on_delete=models.CASCADE,related_name='student')
     postedDate = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
