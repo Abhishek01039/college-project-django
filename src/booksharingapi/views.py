@@ -29,7 +29,7 @@ from rest_framework import generics
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.decorators import parser_classes
 from .models import Stud, Book, PurchasedBook, Image, FeedBack
-from .serializers import StudentSerializer, BookSerializer, PurchasedBookSerializer, ImageSerializer, FeedBackSerializer,BookModelMutation
+from .serializers import StudentSerializer, BookSerializer, PurchasedBookSerializer, ImageSerializer, FeedBackSerializer, BookModelMutation
 from bookSharingBackend.schema import schema
 
 # from .permissions import IsOwnerOrReadOnly
@@ -40,6 +40,16 @@ from bookSharingBackend.schema import schema
 def index(request):
     return HttpResponse("Hello")
 
+
+def room(request, room_name):
+    return render(request, 'index.html', {
+        'room_name': room_name
+    })
+
+
+class webSocket(APIView):
+    def get(self):
+        pass
 
 class StudentList(APIView):
     permission_classes = [IsAuthenticated]
@@ -158,16 +168,16 @@ class HomeList(generics.ListCreateAPIView):
 
 # schema = graphene.Schema(query=Query)
 
+
 class BookType(DjangoObjectType):
     class Meta:
         model = Book
 
 
-
 class BookMutation(APIView):
 
-    def get(self,request):
-        query='''
+    def get(self, request):
+        query = '''
             
             query hello{
               allIngredients{
@@ -198,11 +208,10 @@ class BookMutation(APIView):
               }
             }
 
-         ''';
+         '''
         result = schema.execute(query)
         return Response(result.data)
-    
-    
+
 
 # curl -X GET http://127.0.0.1:8000/booksharing/book/ -H 'Authorization: Token c19a600c77f8633a0f79c737b1851bbbb4f5e661' | json_pp
 class BookList(generics.ListCreateAPIView):
@@ -229,7 +238,6 @@ class BookList(generics.ListCreateAPIView):
     # print(book)
     serializer_class = BookSerializer
     # return Response(serializer_class)
-    
 
     def post(self, request, format=None):
 
@@ -309,7 +317,7 @@ class BookDetail(APIView):
 
 class PurchasedBookList(APIView):
     permission_classes = [IsAuthenticated]
-    
+
     parser_class = (FileUploadParser, MultiPartParser, JSONParser)
     """
     List all snippets, or create a new snippet.

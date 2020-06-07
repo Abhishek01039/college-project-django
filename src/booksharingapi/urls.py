@@ -4,6 +4,7 @@ from . import views
 from rest_framework.authtoken.views import obtain_auth_token
 from django.conf.urls.static import static
 from django.conf import settings
+from .consumers import ListAPIView
 from rest_framework.urlpatterns import format_suffix_patterns
 # router = routers.DefaultRouter()
 # router.register(r'student', UserViewSet)
@@ -18,11 +19,13 @@ urlpatterns = [
     path('book/', views.BookList.as_view()),  # get, post
     path('book/<int:pk>/', views.BookDetail.as_view()),  # get, delete, put
     path('purchasedbook/', views.PurchasedBookList.as_view()),  # get, post
-    
-    path('purchasedbook/<int:pk>/', views.PurchasedBookDetail.as_view()), # get, delete, put
+
+    # get, delete, put
+    path('purchasedbook/<int:pk>/', views.PurchasedBookDetail.as_view()),
     path('bookimage/', views.BookImageList.as_view()),  # get, post
-    
-    path('bookimage/<int:pk>/', views.BookImageDetail.as_view()), # get, delete, put
+
+    # get, delete, put
+    path('bookimage/<int:pk>/', views.BookImageDetail.as_view()),
     path('feedback/', views.FeedBackList.as_view()),  # get, post
     path('feedback/<int:pk>/', views.FeedBackDetail.as_view()),  # get, delete, put
     path('login/', views.LogIn.as_view()),  # post
@@ -34,13 +37,16 @@ urlpatterns = [
     path('changepass/<int:pk>/', views.ChangePassword.as_view()),  # post
     path('latestbook/', views.BookLatestList.as_view()),  # get
     path('homelist/', views.HomeList.as_view()),  # get
-    path('updatestudentphoto/<int:pk>/',views.UpdateStudentPhoto.as_view()),  # put
-    path('purchasedbookbyuser/<int:pk>/',views.PurchasedBookByUser.as_view()),  # get
+    path('updatestudentphoto/<int:pk>/',
+         views.UpdateStudentPhoto.as_view()),  # put
+    path('purchasedbookbyuser/<int:pk>/',
+         views.PurchasedBookByUser.as_view()),  # get
     path('updatebookimage/', views.BookImageUpdate.as_view()),  # put
     path('addimagelist/', views.AddImageList.as_view()),  # post
     path('sendemail/', views.SendEmail.as_view()),  # post
     path('updatepassword/', views.UpdatePassword.as_view()),  # put
-    path('getdatabygraphql/',views.BookMutation.as_view()), # get
+    path('getdatabygraphql/', views.BookMutation.as_view()),  # get
+    path('room/', ListAPIView.as_view()),  # get
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns = format_suffix_patterns(urlpatterns)

@@ -33,8 +33,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get(
     "SECRET_KEY", "32db5fd9bbd220fb86e812bda1f60015f864cecf4b3fe717")
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = False
+DEBUG = True
+# DEBUG = False
 DEBUG404 = True
 
 ALLOWED_HOSTS = [
@@ -66,13 +66,14 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'django_cleanup',
     'graphene_django',
+    'channels',
 ]
 
 GRAPHENE = {
     "SCHEMA": "bookSharingBackend.schema.schema",
     "SCHEMA_INDENT": 2,
     "MIDDLEWARE": ("graphene_django.debug.DjangoDebugMiddleware",),
-    
+
 }
 
 # REST_FRAMEWORK = {
@@ -82,6 +83,10 @@ GRAPHENE = {
 #         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
 #     ]
 # }
+
+# web socket
+ASGI_APPLICATION = 'bookSharingBackend.routing.application'
+
 REST_FRAMEWORK = {
     'DEFAULT_PARSER_CLASSES': (
         'rest_framework.parsers.FormParser',
@@ -150,7 +155,9 @@ ROOT_URLCONF = 'bookSharingBackend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates')
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
