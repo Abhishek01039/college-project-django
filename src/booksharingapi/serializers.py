@@ -16,34 +16,28 @@ class StudentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Stud
-        fields = ['id', 'enrollmentNo', 'firstName', 'lastName', 'email',
-                  'age', 'collegeName', 'collegeYear', 'course', 'password', 'address', 'contactNo', 'photo']
+        fields = ['id',  'firstName', 'lastName', 'email',
+                  'age', 'password', 'address', 'contactNo', 'photo']
 
     def create(self, validated_data):
         return Stud.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         instance.id = validated_data.get('id', instance.id)
-        instance.enrollmentNo = validated_data.get(
-            'enrollmentNo', instance.enrollmentNo)
-        instance.firstName = validated_data.get(
-            'firstName', instance.firstName)
+        # instance.enrollmentNo = validated_data.get('enrollmentNo', instance.enrollmentNo)
+        instance.firstName = validated_data.get('firstName', instance.firstName)
         instance.lastName = validated_data.get('lastName', instance.lastName)
         instance.email = validated_data.get('email', instance.email)
         instance.age = validated_data.get('age', instance.age)
-        instance.collegeName = validated_data.get(
-            'collegeName', instance.collegeName)
-        instance.collegeYear = validated_data.get(
-            'collegeYear', instance.collegeYear)
-        instance.course = validated_data.get('course', instance.course)
+        # instance.collegeName = validated_data.get('collegeName', instance.collegeName)
+        # instance.collegeYear = validated_data.get('collegeYear', instance.collegeYear)
+        # instance.course = validated_data.get('course', instance.course)
         instance.password = validated_data.get('password', instance.password)
         instance.address = validated_data.get('address', instance.address)
-        instance.contactNo = validated_data.get(
-            'contactNo', instance.contactNo)
+        instance.contactNo = validated_data.get('contactNo', instance.contactNo)
         instance.photo = validated_data.get('photo', instance.photo)
         instance.save()
         return instance
-
 
 
 class PurchasedBookSerializer(serializers.ModelSerializer):
@@ -88,7 +82,7 @@ class BookSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Book
-        fields = ('bookId', 'bookName', 'isbnNo', 'authorName', 'pubName',  'originalPrice', 'price',
+        fields = ('bookId', 'bookName', 'isbnNo', 'authorName', 'pubName',  'originalPrice', 'price', 'edition',
                   'bookCatgName', 'postedBy', 'postedDate', 'Book_Image')
 
     def create(self, validated_data):
@@ -104,6 +98,7 @@ class BookSerializer(serializers.ModelSerializer):
         instance.originalPrice = validated_data.get(
             'originalPrice', instance.originalPrice)
         instance.price = validated_data.get('price', instance.price)
+        instance.edition = validated_data.get('edition', instance.edition)
         instance.bookCatgName = validated_data.get(
             'bookCatgName', instance.bookCatgName)
         instance.postedBy = validated_data.get('postedBy', instance.postedBy)
@@ -113,11 +108,14 @@ class BookSerializer(serializers.ModelSerializer):
         return instance
 
 # Mutation for graphql
+
+
 class BookModelMutation(SerializerMutation):
     class Meta:
         serializer_class = BookSerializer
         model_operations = ['create']
         lookup_field = 'bookId'
+
 
 class FeedBackSerializer(serializers.ModelSerializer):
 

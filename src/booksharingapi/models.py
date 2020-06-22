@@ -15,14 +15,14 @@ from django.dispatch import receiver
 
 class Stud(models.Model):
     id = models.AutoField(primary_key=True)
-    enrollmentNo = models.CharField(max_length=30, default='')
+    # enrollmentNo = models.CharField(max_length=30, default='')
     firstName = models.CharField(max_length=20, default='')
     lastName = models.CharField(max_length=20, default='')
     email = models.EmailField(max_length=200, default='', unique=True)
     age = models.IntegerField(default=0)
-    collegeName = models.CharField(max_length=200, default='')
-    collegeYear = models.IntegerField(default=0)
-    course = models.CharField(max_length=200, default='')
+    # collegeName = models.CharField(max_length=200, default='')
+    # collegeYear = models.IntegerField(default=0)
+    # course = models.CharField(max_length=200, default='')
     password = models.CharField(max_length=20, default='')
     address = models.CharField(max_length=200, default='')
     contactNo = PhoneNumberField(
@@ -46,8 +46,9 @@ class Book(models.Model):
     pubName = models.CharField(max_length=30)
     originalPrice = models.IntegerField()
     price = models.IntegerField()
+    edition = models.CharField(max_length=30)
     bookCatgName = models.CharField(max_length=200, default="")
-    postedBy = models.ForeignKey(Stud, on_delete=models.CASCADE,related_name='student')
+    postedBy = models.ForeignKey(Stud, on_delete=models.CASCADE, related_name='student')
     postedDate = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

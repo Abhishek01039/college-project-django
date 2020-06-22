@@ -51,6 +51,7 @@ class webSocket(APIView):
     def get(self):
         pass
 
+
 class StudentList(APIView):
     permission_classes = [IsAuthenticated]
     # authentication_classes = [SessionAuthentication,
@@ -73,7 +74,7 @@ class StudentList(APIView):
         # request.data['photo'] = ContentFile(base64.b64decode(
         #     request.data['photo']), name=request.data['enrollmentNo']+'.'+'jpg')
         student = Stud.objects.filter(
-            enrollmentNo=request.data['enrollmentNo']).values()
+            email=request.data['email']).values()
         # print(student)
         serializer = StudentSerializer(student, many=True)
 
@@ -82,21 +83,20 @@ class StudentList(APIView):
 
         if serializer.data == []:
             data = {}
-            data['enrollmentNo'] = request.data['enrollmentNo']
+            # data['enrollmentNo'] = request.data['enrollmentNo']
             data['firstName'] = request.data['firstName']
             data['lastName'] = request.data['lastName']
             data['email'] = request.data['email']
             data['age'] = int(request.data['age'])
-            data['course'] = request.data['course']
+            # data['course'] = request.data['course']
             data['password'] = request.data['password']
-            data['collegeName'] = request.data['collegeName']
-            data['collegeYear'] = int(request.data['collegeYear'])
+            # data['collegeName'] = request.data['collegeName']
+            # data['collegeYear'] = int(request.data['collegeYear'])
             data['address'] = request.data['address']
             data['contactNo'] = request.data['contactNo']
             # extn = request.data['photo'].split(';')[0].split('/')[1]
             if request.data['photo'] != "":
-                data['photo'] = ContentFile(base64.b64decode(
-                    request.data['photo']), name=request.data['enrollmentNo']+'.'+request.data['extansion'])
+                data['photo'] = ContentFile(base64.b64decode(request.data['photo']), name=request.data['email']+'.'+request.data['extansion'])
 
             serializer = StudentSerializer(data=data)
             if serializer.is_valid():
@@ -194,14 +194,10 @@ class BookMutation(APIView):
                     bookCatgName  
                     postedBy{
                       id
-                      enrollmentNo
                       firstName
                       lastName
                       email
                       age
-                      collegeName
-                      collegeYear
-                      course
                     }
                   }
                 }
@@ -418,15 +414,15 @@ class PurchasedBookDetail(APIView):
 class LogIn(APIView):
     permission_classes = [IsAuthenticated]
 
-    def getStudent(self, enrollmentNo, password):
+    def getStudent(self, email, password):
         student = Stud.objects.filter(
-            enrollmentNo=enrollmentNo, password=password).values()
+            email=email, password=password).values()
         return student
 
     def post(self, request):
         # student=Stud.objects.filter(enrollmentNo=request.data['enrollmentNo'],password=request.data['password'])
         student = self.getStudent(
-            request.data['enrollmentNo'], request.data['password'])
+            request.data['email'], request.data['password'])
         # print(student)
         serializer = StudentSerializer(student, many=True)
         # if serializer.is_valid():
@@ -695,7 +691,7 @@ class UpdateStudentPhoto(APIView):
                 os.remove(student.photo.path)
         studentPhoto = {}
         studentPhoto['photo'] = ContentFile(base64.b64decode(
-            request.data['photo']), name=request.data['enrollmentNo']+'.'+request.data['extansion'])
+            request.data['photo']), name=request.data['studentName']+'.'+request.data['extansion'])
         serializer = StudentSerializer(student, data=studentPhoto)
         if serializer.is_valid():
             serializer.save()

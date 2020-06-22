@@ -13,7 +13,7 @@ admin.site.site_title = "Book Sharing"
 
 @admin.register(Stud)
 class Student(admin.ModelAdmin):
-    list_display = ('firstName', 'lastName', 'enrollmentNo', 'collegeName')
+    list_display = ('firstName', 'lastName', 'email')
 
 
 @admin.register(Book)
