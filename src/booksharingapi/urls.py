@@ -4,7 +4,7 @@ from . import views
 from rest_framework.authtoken.views import obtain_auth_token
 from django.conf.urls.static import static
 from django.conf import settings
-from .consumers import ListAPIView
+# from .consumers import ListAPIView
 from rest_framework.urlpatterns import format_suffix_patterns
 # router = routers.DefaultRouter()
 # router.register(r'student', UserViewSet)
@@ -46,7 +46,7 @@ urlpatterns = [
     path('sendemail/', views.SendEmail.as_view()),  # post
     path('updatepassword/', views.UpdatePassword.as_view()),  # put
     path('getdatabygraphql/', views.BookMutation.as_view()),  # get
-    path('room/', ListAPIView.as_view()),  # get
+    # path('room/', ListAPIView.as_view()),  # get
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns = format_suffix_patterns(urlpatterns)

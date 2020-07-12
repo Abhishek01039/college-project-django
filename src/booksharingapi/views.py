@@ -133,7 +133,7 @@ class StudentDetail(APIView):
         if os.path.isfile(student.photo.path):
             os.remove(student.photo.path)
         student.delete()
-        return Response("Success", status=status.HTTP_204_NO_CONTENT)
+        return Response("Success", status=status.HTTP_200_OK)
 
     def put(self, request, pk, formate=None):
         student = self.get_object(pk)
