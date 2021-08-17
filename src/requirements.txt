@@ -6,7 +6,7 @@ Django==3.1.12
 django-phone-verify==1.1.0
 django-phonenumber-field==4.0.0
 django-rest-framework==0.1.0
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 idna==2.9
 nexmo==2.4.0
 phonenumbers==8.12.1
